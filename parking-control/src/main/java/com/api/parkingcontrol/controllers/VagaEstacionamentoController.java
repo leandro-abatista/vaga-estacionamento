@@ -5,8 +5,13 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.query.sqm.SortOrder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -74,8 +79,9 @@ public class VagaEstacionamentoController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<VagaEstacionamentoModel>> getAllVagasEstacionamento() {
-		return ResponseEntity.status(HttpStatus.OK).body(vagaEstacionamentoService.findAll());
+	public ResponseEntity<Page<VagaEstacionamentoModel>> getAllVagasEstacionamento(@PageableDefault(page = 0, size = 10, sort = "id", 
+																					direction = Direction.ASC) Pageable pageable) {
+		return ResponseEntity.status(HttpStatus.OK).body(vagaEstacionamentoService.findAll(pageable));
 	}
 
 	@GetMapping("/{id}")
@@ -106,23 +112,28 @@ public class VagaEstacionamentoController {
 		if (!vagaEstacionamentoModelOptional.isPresent()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vaga de Estacionamento não encontrado!");
 		}
-		/*Essa é a primeira forma de fazer o update
-		var vagaEstacionamentoModel = vagaEstacionamentoModelOptional.get();
-		vagaEstacionamentoModel.setNumeroVaga(vagaEstacionamentoDto.getNumeroVaga());
-		vagaEstacionamentoModel.setPlacaCarro(vagaEstacionamentoDto.getPlacaCarro());
-		vagaEstacionamentoModel.setMarca(vagaEstacionamentoDto.getMarca());
-		vagaEstacionamentoModel.setModelo(vagaEstacionamentoDto.getModelo());
-		vagaEstacionamentoModel.setCor(vagaEstacionamentoDto.getCor());
-		vagaEstacionamentoModel.setNomeResponsavel(vagaEstacionamentoDto.getNomeResponsavel());
-		vagaEstacionamentoModel.setApartamento(vagaEstacionamentoDto.getApartamento());
-		vagaEstacionamentoModel.setBloco(vagaEstacionamentoDto.getBloco());
-		*/
-		
-		//Segunda maneira de fazer o update, lembrando que as duas são válidas, porém a segunda tem o código mais enxuto
+		/*
+		 * Essa é a primeira forma de fazer o update var vagaEstacionamentoModel =
+		 * vagaEstacionamentoModelOptional.get();
+		 * vagaEstacionamentoModel.setNumeroVaga(vagaEstacionamentoDto.getNumeroVaga());
+		 * vagaEstacionamentoModel.setPlacaCarro(vagaEstacionamentoDto.getPlacaCarro());
+		 * vagaEstacionamentoModel.setMarca(vagaEstacionamentoDto.getMarca());
+		 * vagaEstacionamentoModel.setModelo(vagaEstacionamentoDto.getModelo());
+		 * vagaEstacionamentoModel.setCor(vagaEstacionamentoDto.getCor());
+		 * vagaEstacionamentoModel.setNomeResponsavel(vagaEstacionamentoDto.
+		 * getNomeResponsavel());
+		 * vagaEstacionamentoModel.setApartamento(vagaEstacionamentoDto.getApartamento()
+		 * ); vagaEstacionamentoModel.setBloco(vagaEstacionamentoDto.getBloco());
+		 */
+
+		// Segunda maneira de fazer o update, lembrando que as duas são válidas, porém a
+		// segunda tem o código mais enxuto
 		var vagaEstacionamentoModel = new VagaEstacionamentoModel();
 		BeanUtils.copyProperties(vagaEstacionamentoDto, vagaEstacionamentoModel);
-		vagaEstacionamentoModel.setId(vagaEstacionamentoModelOptional.get().getId());//esse permanece o mesmo
-		vagaEstacionamentoModel.setDataRegistro(vagaEstacionamentoModelOptional.get().getDataRegistro());//esse permanece o mesmo
+		vagaEstacionamentoModel.setId(vagaEstacionamentoModelOptional.get().getId());// esse permanece o mesmo
+		vagaEstacionamentoModel.setDataRegistro(vagaEstacionamentoModelOptional.get().getDataRegistro());// esse
+																											// permanece
+																											// o mesmo
 		return ResponseEntity.status(HttpStatus.OK).body(vagaEstacionamentoService.save(vagaEstacionamentoModel));
 	}
 

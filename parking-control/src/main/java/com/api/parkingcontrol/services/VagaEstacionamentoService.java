@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.api.parkingcontrol.models.VagaEstacionamentoModel;
@@ -39,8 +41,8 @@ public class VagaEstacionamentoService {
 		return vagaEstacionamentoRepository.existsByApartamentoAndBloco(apartamento, bloco);
 	}
 
-	public List<VagaEstacionamentoModel> findAll() {
-		return vagaEstacionamentoRepository.findAll();
+	public Page<VagaEstacionamentoModel> findAll(Pageable pageable) {
+		return vagaEstacionamentoRepository.findAll(pageable);
 	}
 
 	public Optional<VagaEstacionamentoModel> findById(Long id) {
