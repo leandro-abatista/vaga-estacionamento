@@ -87,4 +87,5 @@ public class VagaEstacionamentoDto {
 		this.bloco = bloco;
 	}
 
+
 }

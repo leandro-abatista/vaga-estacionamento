@@ -1,5 +1,8 @@
 package com.api.parkingcontrol.services;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,5 +25,25 @@ public class VagaEstacionamentoService {
 	@Transactional
 	public VagaEstacionamentoModel save(VagaEstacionamentoModel vagaEstacionamentoModel) {
 		return vagaEstacionamentoRepository.save(vagaEstacionamentoModel);
+	}
+
+	public boolean existsByPlacaCarro(String placaCarro) {
+		return vagaEstacionamentoRepository.existsByPlacaCarro(placaCarro);
+	}
+
+	public boolean existsByNumeroVaga(String numeroVaga) {
+		return vagaEstacionamentoRepository.existsByNumeroVaga(numeroVaga);
+	}
+
+	public boolean existsByApartamentoAndBloco(String apartamento, String bloco) {
+		return vagaEstacionamentoRepository.existsByApartamentoAndBloco(apartamento, bloco);
+	}
+
+	public List<VagaEstacionamentoModel> findAll() {
+		return vagaEstacionamentoRepository.findAll();
+	}
+
+	public Optional<VagaEstacionamentoModel> findById(Long id) {
+		return vagaEstacionamentoRepository.findById(id);
 	}
 }
